@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/original"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="  Original"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <ImageView
+        android:id="@+id/imageViewInput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        app:srcCompat="@drawable/ic_image" />
+
+    <TextView
+        android:id="@+id/resultImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="  Result Image"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <ImageView
+        android:id="@+id/imageViewOutput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4" />
+
+    <LinearLayout
+        android:layout_height="0dp"
+        android:layout_weight="0.06"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/applybutton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Apply" />
+    </LinearLayout>
+
+
+</LinearLayout>
