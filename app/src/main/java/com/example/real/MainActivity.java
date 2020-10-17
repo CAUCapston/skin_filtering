@@ -30,6 +30,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
@@ -58,10 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     boolean isReady = false;
 
-    Canvas canvas;
-    ColorMatrix matrix = new ColorMatrix();
     Bitmap bitmapOutput;
-
+    Bitmap result;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,14 +222,17 @@ public class MainActivity extends AppCompatActivity {
         Button2.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Intent intent = new Intent(getApplicationContext(),skindetection.class);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                result.compress(Bitmap.CompressFormat.JPEG,100,stream);
+                byte[] bytearray = stream.toByteArray();
+                intent.putExtra("image",bytearray);
                 startActivity(intent);
             }
         });
 
 
-        Intent intent = new Intent();
-        intent.setAction("imagefilter");
-        intent.putExtra("img",bitmapOutput);
+
     }
 
     @Override
@@ -400,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
     private void drawBitmap(ColorMatrix colorMatrix,Bitmap image) {
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
-        Bitmap result = image.copy(Bitmap.Config.ARGB_8888, true);
+        result = image.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(result);
         canvas.drawBitmap( result, 0, 0, paint);
         imageVIewInput.setImageBitmap(result);

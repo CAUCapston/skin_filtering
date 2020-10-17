@@ -23,7 +23,11 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class autoimageprocessing extends AppCompatActivity {
 
@@ -40,8 +44,9 @@ public class autoimageprocessing extends AppCompatActivity {
     private static final String TAG = "opencv";
     private final int GET_GALLERY_IMAGE = 200;
 
-    boolean isReady = false;
 
+    boolean isReady = false;
+    Bitmap bitmapOutput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +54,6 @@ public class autoimageprocessing extends AppCompatActivity {
 
         imageVIewInput = (ImageView)findViewById(R.id.imageViewInput);
         imageVIewOuput = (ImageView)findViewById(R.id.imageViewOutput);
-
-        Button Button = (Button)findViewById(R.id.applybutton);
-        Button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                awbprocess_and_showResult();
-            }
-        });
 
         imageVIewInput.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -65,6 +63,37 @@ public class autoimageprocessing extends AppCompatActivity {
                 startActivityForResult(intent, GET_GALLERY_IMAGE);
             }
         });
+
+
+
+
+        Button Main = (Button)findViewById(R.id.main);
+        Main.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent intent = new Intent(getApplicationContext(),Startbutton.class);
+                startActivity(intent);
+            }
+        });
+        Button Apply = (Button)findViewById(R.id.applybutton);
+        Apply.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                awbprocess_and_showResult();
+            }
+        });
+        Button Skinextraction = (Button)findViewById(R.id.skinextraction);
+        Skinextraction.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent intent = new Intent(getApplicationContext(),skindetection.class);
+                //bitmap 사이즈 줄이기
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmapOutput = Bitmap.createScaledBitmap(bitmapOutput, 800, 800, true);
+                bitmapOutput.compress(Bitmap.CompressFormat.JPEG,100,stream);
+                byte[] bytearray = stream.toByteArray();
+                intent.putExtra("image", bytearray);
+                startActivity(intent);
+            }
+        });
+
         if (!hasPermissions(PERMISSIONS)) { //퍼미션 허가를 했었는지 여부를 확인
             requestNecessaryPermissions(PERMISSIONS);//퍼미션 허가안되어 있다면 사용자에게 요청
         }
@@ -76,6 +105,7 @@ public class autoimageprocessing extends AppCompatActivity {
 
         isReady = true;
     }
+
 
     public native void autowhitebalancingprocessing(long inputImage, long outputImage);
 
@@ -89,7 +119,7 @@ public class autoimageprocessing extends AppCompatActivity {
         autowhitebalancingprocessing(img_input.getNativeObjAddr(), img_output.getNativeObjAddr());
 
 
-        Bitmap bitmapOutput = Bitmap.createBitmap(img_output.cols(), img_output.rows(), Bitmap.Config.ARGB_8888);
+        bitmapOutput = Bitmap.createBitmap(img_output.cols(), img_output.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(img_output, bitmapOutput);
         imageVIewOuput.setImageBitmap(bitmapOutput);
     }

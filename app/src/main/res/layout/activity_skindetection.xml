@@ -18,78 +18,76 @@
         android:textSize="30sp" />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+        android:id="@+id/filteringimage"
         android:layout_width="match_parent"
-        android:layout_height="258dp">
-
-        <ImageView
-            android:id="@+id/filteringimage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_image" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="442dp"
+        android:layout_weight="0.4"
+        app:srcCompat="@drawable/ic_image" />
 
     <LinearLayout
+        android:id="@+id/animation"
         android:layout_width="match_parent"
-        android:layout_height="57dp"
+        android:layout_height="54dp"
         android:orientation="vertical">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:lottie_fileName="arrow-down.json" />
+            android:id="@+id/animationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="arrow_down2.json"
+            app:lottie_loop="true" />
+
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/skinlayout"
         android:layout_width="match_parent"
-        android:layout_height="326dp"
+        android:layout_height="323dp"
         android:visibility="invisible">
 
         <ImageView
             android:id="@+id/skinimage"
-            android:layout_width="282dp"
-            android:layout_height="167dp"
+            android:layout_width="229dp"
+            android:layout_height="115dp"
             android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_image"
-            tools:layout_editor_absoluteX="64dp" />
+            app:srcCompat="@drawable/ic_image" />
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="148dp"
-            android:layout_height="62dp"
+            android:layout_width="153dp"
+            android:layout_height="75dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="피부색 코드"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/skinimage" />
 
         <TextView
             android:id="@+id/textView8"
-            android:layout_width="109dp"
-            android:layout_height="44dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="115dp"
+            android:layout_height="49dp"
             android:gravity="center"
             android:text="#000000"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView1" />
+            app:layout_constraintTop_toBottomOf="@+id/textView1"
+            app:layout_constraintVertical_bias="0.493" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <Button
             android:id="@+id/button4"

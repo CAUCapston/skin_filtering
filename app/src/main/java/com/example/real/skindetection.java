@@ -30,6 +30,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import org.opencv.android.Utils;
@@ -49,12 +50,13 @@ public class skindetection extends AppCompatActivity
     }
     private static final String TAG = "skin-detection";
 
-    // 피부색 보정 결과 이미지 가져오기
-    Mat image = (Mat) getIntent().getExtras().get("img");
+
 
     ConstraintLayout skinlayout;
+    LinearLayout animationlayout;
     ImageView filteringimage;
     ImageView skinimage;
+    Bitmap filtering_bitmap;
     Mat filter_image;
     Mat skin_image;
 
@@ -93,30 +95,30 @@ public class skindetection extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         copyFile("shape_predictor_68_face_landmarks.dat");
-
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_skindetection);
 
         filteringimage = (ImageView)findViewById(R.id.filteringimage);
         skinimage = (ImageView)findViewById(R.id.skinimage);
         skinlayout = (ConstraintLayout)findViewById(R.id.skinlayout);
+        animationlayout = (LinearLayout)findViewById(R.id.animation);
 
+
+        // 피부색 보정 결과 이미지 가져오기
+        Bitmap image;
+        byte[] byteArray = getIntent().getByteArrayExtra("image");
+        filtering_bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
 
         // filtering된 이미지 가져와서 imageview에 넣기
-        Bitmap bitmapOutput;
-        bitmapOutput = Bitmap.createBitmap(filter_image.cols(), filter_image.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(filter_image, bitmapOutput);
-        filteringimage.setImageBitmap(bitmapOutput);
-
+        filteringimage.setImageBitmap(filtering_bitmap);
+        final LottieAnimationView lottie = (LottieAnimationView) findViewById(R.id.animationView);
 
 
         Button Button1 = (Button)findViewById(R.id.extraction);
         Button1.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                LottieAnimationView lottie = (LottieAnimationView) findViewById(R.id.lottie);
                 lottie.playAnimation();
-                lottie.loop(true);
+                animationlayout.setVisibility(View.VISIBLE);
 
                 skin_image = skincolor_extraction();
                 // 가져온 사진의 두 볼을 인식해 색 평균값을 가진 skinimage에 넣기
@@ -127,6 +129,7 @@ public class skindetection extends AppCompatActivity
 
                 // 결과 이미지 가져와주기
                 skinlayout.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -137,9 +140,11 @@ public class skindetection extends AppCompatActivity
     public native void createskin(long output, double result[]);
 
     public Mat skincolor_extraction(){
-        Mat right_cheek = null;
-        Mat left_cheek = null;
-        Detect(image.getNativeObjAddr() ,right_cheek.getNativeObjAddr(),left_cheek.getNativeObjAddr());
+        Mat right_cheek = new Mat();
+        Mat left_cheek = new Mat();
+        Mat faceimage = new Mat();
+        Utils.bitmapToMat(filtering_bitmap,faceimage);
+        Detect(faceimage.getNativeObjAddr() ,right_cheek.getNativeObjAddr(),left_cheek.getNativeObjAddr());
 
         double[] avg_right = new double[3];
         double[] avg_left = new double[3];
