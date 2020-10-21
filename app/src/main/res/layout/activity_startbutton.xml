@@ -11,7 +11,7 @@
         android:layout_width="221dp"
         android:layout_height="131dp"
         android:layout_marginBottom="56dp"
-        android:text="AUTO"
+        android:text="자동 보정"
         app:layout_constraintBottom_toTopOf="@+id/filterbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -21,7 +21,7 @@
         android:layout_width="221dp"
         android:layout_height="131dp"
         android:layout_marginBottom="56dp"
-        android:text="FILTER"
+        android:text="수정 보정"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

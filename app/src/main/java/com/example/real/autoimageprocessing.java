@@ -86,7 +86,7 @@ public class autoimageprocessing extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),skindetection.class);
                 //bitmap 사이즈 줄이기
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmapOutput = Bitmap.createScaledBitmap(bitmapOutput, 800, 800, true);
+                bitmapOutput = Bitmap.createScaledBitmap(bitmapOutput, 800, 700, true);
                 bitmapOutput.compress(Bitmap.CompressFormat.JPEG,100,stream);
                 byte[] bytearray = stream.toByteArray();
                 intent.putExtra("image", bytearray);

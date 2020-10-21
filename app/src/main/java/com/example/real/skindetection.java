@@ -1,40 +1,31 @@
 package com.example.real;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.Camera;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
-import androidx.annotation.NonNull;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
+
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,12 +47,18 @@ public class skindetection extends AppCompatActivity
     LinearLayout animationlayout;
     ImageView filteringimage;
     ImageView skinimage;
+    TextView Hex;
+    TextView loading;
     Bitmap filtering_bitmap;
     Mat filter_image;
-    Mat skin_image;
+    Mat right_cheek = new Mat();
+    Mat left_cheek = new Mat();
 
 
-
+    double[] avg_right = new double[3];
+    double[] avg_left = new double[3];
+    double[] result = new double[3];
+    boolean end = false;
     private void copyFile(String filename) {
         String baseDir = Environment.getExternalStorageDirectory().getPath();
         String pathDir = baseDir + File.separator + filename;
@@ -100,65 +97,85 @@ public class skindetection extends AppCompatActivity
 
         filteringimage = (ImageView)findViewById(R.id.filteringimage);
         skinimage = (ImageView)findViewById(R.id.skinimage);
-        skinlayout = (ConstraintLayout)findViewById(R.id.skinlayout);
+        skinlayout = (ConstraintLayout)findViewById(R.id.Constraint);
         animationlayout = (LinearLayout)findViewById(R.id.animation);
-
+        loading = (TextView)findViewById(R.id.loading);
 
         // 피부색 보정 결과 이미지 가져오기
         Bitmap image;
         byte[] byteArray = getIntent().getByteArrayExtra("image");
         filtering_bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+        filter_image = Imgcodecs.imdecode(new MatOfByte(byteArray), Imgcodecs.IMREAD_UNCHANGED);
 
         // filtering된 이미지 가져와서 imageview에 넣기
         filteringimage.setImageBitmap(filtering_bitmap);
+
+
         final LottieAnimationView lottie = (LottieAnimationView) findViewById(R.id.animationView);
 
 
-        Button Button1 = (Button)findViewById(R.id.extraction);
-        Button1.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                lottie.playAnimation();
-                animationlayout.setVisibility(View.VISIBLE);
 
-                skin_image = skincolor_extraction();
-                // 가져온 사진의 두 볼을 인식해 색 평균값을 가진 skinimage에 넣기
+        Hex= (TextView)findViewById(R.id.hexacode);
+        final ProgressDialog mDialog = new ProgressDialog(this);
+
+
+
+
+        Button extract = (Button)findViewById(R.id.extraction);
+        extract.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                loading.setVisibility(View.INVISIBLE);
+                skincolor_extraction();
+                Hex.setText(String.format("#%02X%02X%02X",(int)result[2],(int)result[1],(int)result[0]));
                 Bitmap bitmapOutput;
-                bitmapOutput = Bitmap.createBitmap(skin_image.cols(), skin_image.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(skin_image, bitmapOutput);
+                bitmapOutput = Bitmap.createBitmap(filter_image.cols(), filter_image.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(filter_image, bitmapOutput);
                 skinimage.setImageBitmap(bitmapOutput);
-
-                // 결과 이미지 가져와주기
                 skinlayout.setVisibility(View.VISIBLE);
-
             }
         });
 
 
+        Button main = (Button)findViewById(R.id.mainbutton);
+        main.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),Startbutton.class);
+                startActivity(intent);
+            }
+        });
+
+        Button complete = (Button)findViewById(R.id.complete);
+        main.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Intent intent = new Intent(getApplicationContext(),Startbutton.class);
+                //startActivity(intent);
+            }
+        });
     }
+
+
     public native void Detect(long faceimage,long right,long left);
-    public native void avglab(long cheek,double avg[]);
+    public native double[] avgBGR(long cheek);
     public native void createskin(long output, double result[]);
 
-    public Mat skincolor_extraction(){
-        Mat right_cheek = new Mat();
-        Mat left_cheek = new Mat();
-        Mat faceimage = new Mat();
-        Utils.bitmapToMat(filtering_bitmap,faceimage);
-        Detect(faceimage.getNativeObjAddr() ,right_cheek.getNativeObjAddr(),left_cheek.getNativeObjAddr());
+    public void skincolor_extraction(){
 
-        double[] avg_right = new double[3];
-        double[] avg_left = new double[3];
-        double[] result = new double[3];
-        avglab(right_cheek.getNativeObjAddr(),avg_right);
-        avglab(right_cheek.getNativeObjAddr(),avg_left);
-        result[0] = (avg_left[0] + avg_right[0]) / 2;
-        result[1] = (avg_left[1] + avg_right[1]) / 2;
-        result[2] = (avg_left[2] + avg_right[2]) / 2;
-        int column = right_cheek.cols();
-        int row = right_cheek.rows();
 
-        Mat skinimage = null;
-        createskin(skinimage.getNativeObjAddr(),result);
-        return skinimage;
+        Detect(filter_image.getNativeObjAddr() ,right_cheek.getNativeObjAddr(),left_cheek.getNativeObjAddr());
+
+
+        //각 볼의 평균 lab값 구하기
+        avg_right = avgBGR(right_cheek.getNativeObjAddr());
+        avg_left = avgBGR(left_cheek.getNativeObjAddr());
+        //두 볼의 평균 lab값 구하기
+        result[0] = (avg_left[0] + avg_right[0]) / 2; //B
+        result[1] = (avg_left[1] + avg_right[1]) / 2; //G
+        result[2] = (avg_left[2] + avg_right[2]) / 2; //R
+        Log.d("native-lib ::: result ","" + result[2]+ " "+result[1]+ " " +result[0]);
+
+        //평균 lab값을 이용해 이미지 채우기
+        createskin(filter_image.getNativeObjAddr(),result);
     }
+
+
 }

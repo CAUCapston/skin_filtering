@@ -171,14 +171,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="메인 화면" />
+            android:text="다시 보정" />
 
         <Button
             android:id="@+id/skinextraction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="피부색 검출" />
+            android:text="피부색 확인" />
     </LinearLayout>
 
 

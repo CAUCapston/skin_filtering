@@ -20,8 +20,9 @@
 
     <ImageView
         android:id="@+id/filteringimage"
-        android:layout_width="match_parent"
-        android:layout_height="442dp"
+        android:layout_width="340dp"
+        android:layout_height="214dp"
+        android:layout_gravity="center"
         android:layout_weight="0.4"
         app:srcCompat="@drawable/ic_image" />
 
@@ -41,47 +42,62 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/skinlayout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="323dp"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/skinimage"
-            android:layout_width="229dp"
-            android:layout_height="115dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_image" />
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="153dp"
-            android:layout_height="75dp"
-            android:layout_marginTop="16dp"
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="피부색 코드"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/skinimage" />
+            android:text="피부색 추출 중 ..."
+            android:textSize="36sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="115dp"
-            android:layout_height="49dp"
-            android:gravity="center"
-            android:text="#000000"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView1"
-            app:layout_constraintVertical_bias="0.493" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/Constraint"
+            android:layout_width="match_parent"
+            android:layout_height="323dp"
+            android:foregroundGravity="center"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/skinimage"
+                android:layout_width="229dp"
+                android:layout_height="115dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_image" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="153dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="피부색 코드"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/skinimage" />
+
+            <TextView
+                android:id="@+id/hexacode"
+                android:layout_width="115dp"
+                android:layout_height="49dp"
+                android:gravity="center"
+                android:text="#000000"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView1"
+                app:layout_constraintVertical_bias="0.493" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,11 +106,11 @@
         android:visibility="visible">
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/mainbutton"
             android:layout_width="107dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Again"
+            android:text="다시 보정"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#000000"
             android:textSize="18sp"
@@ -105,18 +121,18 @@
             android:layout_width="107dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Extract"
+            android:text="피부색 추출"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/complete"
             android:layout_width="107dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Complete"
+            android:text="완료"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="#000000"
             android:textSize="18sp"

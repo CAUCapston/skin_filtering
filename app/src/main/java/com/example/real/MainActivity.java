@@ -224,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),skindetection.class);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                result = Bitmap.createScaledBitmap(result, 800, 700, true);
                 result.compress(Bitmap.CompressFormat.JPEG,100,stream);
                 byte[] bytearray = stream.toByteArray();
                 intent.putExtra("image",bytearray);
@@ -241,10 +242,6 @@ public class MainActivity extends AppCompatActivity {
 
         isReady = true;
     }
-
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
